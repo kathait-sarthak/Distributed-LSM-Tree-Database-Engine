@@ -1,0 +1,15 @@
+# Build artifacts
+build/
+**/build/
+
+# Editor settings
+.vscode/
+
+# Generated / local packages
+*.zip
+*.log
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db

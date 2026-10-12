@@ -1,0 +1,43 @@
+// Raft RPC contract for distributed leader election and log replication.
+// This file completes the missing Week 5/6 integration point by defining the
+// wire protocol that the consensus layer expects to use with peer nodes.
+syntax = "proto3";
+
+package lsmdb.v1;
+
+import "lsmdb/v1/common.proto";
+
+service RaftService {
+  rpc RequestVote(RequestVoteRequest) returns (RequestVoteResponse);
+  rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriesResponse);
+}
+
+message RequestVoteRequest {
+  RequestMeta meta = 1;
+  uint32 candidate_id = 2;
+  uint64 last_log_index = 3;
+  uint64 last_log_term = 4;
+}
+
+message RequestVoteResponse {
+  Status status = 1;
+  bool vote_granted = 2;
+  uint32 term = 3;
+}
+
+message AppendEntriesRequest {
+  RequestMeta meta = 1;
+  uint32 leader_id = 2;
+  uint64 term = 3;
+  uint64 prev_log_index = 4;
+  uint64 prev_log_term = 5;
+  repeated bytes entries = 6;
+  uint64 leader_commit = 7;
+}
+
+message AppendEntriesResponse {
+  Status status = 1;
+  uint32 term = 2;
+  bool success = 3;
+  uint64 match_index = 4;
+}

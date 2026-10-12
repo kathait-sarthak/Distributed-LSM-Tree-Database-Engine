@@ -1,0 +1,32 @@
+// Node <-> node and operational RPCs.
+// Raft RPCs (RequestVote / AppendEntries) live in raft.proto and share the
+// common NodeInfo/Status types defined in common.proto.
+syntax = "proto3";
+
+package lsmdb.v1;
+
+import "lsmdb/v1/common.proto";
+
+service NodeService {
+  // Liveness check. The response identifies the responding node.
+  rpc Ping(PingRequest) returns (PingResponse);
+  // Returns this node's identity and the peers it was configured with.
+  rpc GetNodeInfo(GetNodeInfoRequest) returns (GetNodeInfoResponse);
+}
+
+message PingRequest {
+  RequestMeta meta = 1;
+}
+message PingResponse {
+  Status status = 1;
+  NodeInfo responder = 2;
+}
+
+message GetNodeInfoRequest {
+  RequestMeta meta = 1;
+}
+message GetNodeInfoResponse {
+  Status status = 1;
+  NodeInfo self = 2;
+  repeated NodeInfo peers = 3;
+}
